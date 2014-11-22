@@ -55,6 +55,7 @@
 #define FIRMWARE_DIR2   "/vendor/firmware"
 #define FIRMWARE_DIR3   "/firmware/image"
 #define FIRMWARE_DIR4   "/data/misc/wifi"
+#define DEVICES_BASE    "/devices/soc.0"
 
 extern struct selabel_handle *sehandle;
 extern char bootdevice[32];
@@ -170,7 +171,14 @@ void fixup_sys_perms(const char *upath)
     }
     if (access(buf, F_OK) == 0) {
         INFO("restorecon_recursive: %s\n", buf);
+#ifdef _PLATFORM_BASE
+        if(!strcmp(upath, DEVICES_BASE))
+            restorecon(buf);
+        else
+            restorecon_recursive(buf);
+#else
         restorecon_recursive(buf);
+#endif
     }
 }
 
