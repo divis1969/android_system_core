@@ -586,7 +586,7 @@ static char **get_block_device_symlinks(struct uevent *uevent)
     int ret;
     char *p;
     unsigned int size;
-    int is_bootdevice = 0;
+    int is_bootdevice = -1;
     struct stat info;
     int mtd_fd = -1;
     int nr;
@@ -639,7 +639,9 @@ static char **get_block_device_symlinks(struct uevent *uevent)
         free(p);
     }
 
-    if (bootdevice[0] != '\0' && !strncmp(device, bootdevice, sizeof(bootdevice))) {
+    if (bootdevice[0] == '\0')
+        is_bootdevice = 0;
+    else if (!strncmp(device, bootdevice, sizeof(bootdevice))) {
         make_link(link_path, "/dev/block/bootdevice");
         is_bootdevice = 1;
     }
@@ -654,7 +656,7 @@ static char **get_block_device_symlinks(struct uevent *uevent)
         else
             links[link_num] = NULL;
 
-        if (is_bootdevice) {
+        if (is_bootdevice >= 0) {
             if (asprintf(&links[link_num], "/dev/block/bootdevice/by-name/%s", p) > 0)
                 link_num++;
             else
@@ -669,7 +671,7 @@ static char **get_block_device_symlinks(struct uevent *uevent)
         else
             links[link_num] = NULL;
 
-        if (is_bootdevice) {
+        if (is_bootdevice >= 0) {
             if (asprintf(&links[link_num], "/dev/block/bootdevice/by-num/p%d", uevent->partition_num) > 0)
                 link_num++;
             else
