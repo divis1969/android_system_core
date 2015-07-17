@@ -65,6 +65,7 @@ on init
 
     mkdir /system
     mkdir /data 0771 system system
+    mkdir /data/third-verfiy 0771 system system
     mkdir /cache 0770 system cache
     mkdir /config 0500 root root
 
