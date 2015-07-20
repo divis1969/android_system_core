@@ -65,7 +65,6 @@ on init
 
     mkdir /system
     mkdir /data 0771 system system
-    mkdir /data/third-verfiy 0771 system system
     mkdir /cache 0770 system cache
     mkdir /config 0500 root root
 
@@ -276,6 +275,9 @@ on post-fs-data
     chmod 0660 /data/misc/wifi/wpa_supplicant.conf
     mkdir /data/local 0751 root root
     mkdir /data/misc/media 0700 media media
+
+    # For mkta
+    mkdir /data/third-verfiy 0771 system system
 
     # For security reasons, /data/local/tmp should always be empty.
     # Do not place files or directories in /data/local/tmp
