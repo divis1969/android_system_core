@@ -277,7 +277,7 @@ on post-fs-data
     mkdir /data/misc/media 0700 media media
 
     # For mkta
-    mkdir /data/third-verfiy 0771 system system
+    mkdir /data/third-verify 0771 system system
 
     # For security reasons, /data/local/tmp should always be empty.
     # Do not place files or directories in /data/local/tmp
