@@ -711,3 +711,53 @@ ifc_configure(const char *ifname,
 
     return 0;
 }
+
+int ifc_set_txq_state(const char *name, int value)
+{
+    int r;
+    struct ifreq ifr;
+    int sockfd;
+    ifc_init_ifr(name, &ifr);
+    ifr.ifr_metric = value;
+
+    sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+    if (sockfd < 0) {
+        printerr("ifc_set_txq_state: create ctl socket failed\n");
+        return -1;
+    }
+
+    r = ioctl(ifc_ctl_sock, 0x89f0, &ifr);
+    if(r != 0) { 
+        printerr("ifc_set_txq_state(ifname=%s, md_id=%d) error:%d(%s)", name, value, errno, strerror(errno));
+        close(sockfd);
+        return -1;
+    }
+    close(sockfd);
+    printerr("ifc_set_txq_state(ifname=%s, md_id=%d) OK", name, value);
+    return 0;
+}
+
+int ifc_ccmni_md_cfg(const char *name, int value)
+{
+    int r;
+    struct ifreq ifr;
+    int sockfd;
+    ifc_init_ifr(name, &ifr);
+    ifr.ifr_metric = value;
+
+    sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+    if (sockfd < 0) {
+        printerr("ifc_ccmni_md_cfg: create ctl socket failed\n");
+        return -1;
+    }
+
+    r = ioctl(ifc_ctl_sock, 0x89f1, &ifr);
+    if(r != 0) { 
+        printerr("ifc_ccmni_md_configure(ifname=%s, md_id=%d) error:%d(%s)", name, value, errno, strerror(errno));
+        close(sockfd);
+        return -1;
+    }
+    close(sockfd);
+    printerr("ifc_ccmni_md_configure(ifname=%s, md_id=%d) OK", name, value);
+    return 0;
+}
