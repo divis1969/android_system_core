@@ -753,3 +753,9 @@ int ifc_ccmni_md_cfg(const char *name, int value)
     printerr("ifc_ccmni_md_configure(ifname=%s, md_id=%d) OK", name, value);
     return 0;
 }
+
+int ifc_set_throttle(const char *ifname, int rxKbps, int txKbps)
+{
+    printerr("ifc_set_throttle: %s, %d, %d not implemented!\n", ifname, rxKbps, txKbps);
+    return 0;
+}
