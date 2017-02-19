@@ -586,14 +586,9 @@ static int mount_fstab(const char* fstabfile, int mount_mode) {
         /* fork failed, return an error */
         return -1;
     }
-
-    std::string bootmode = property_get("ro.bootmode");
-    if (strncmp(bootmode.c_str(), "ffbm", 4) == 0) {
-        NOTICE("ffbm mode, not start class main\n");
-        return 0;
-    }
     return ret;
 }
+
 
 /* Queue event based on fs_mgr return code.
  *
@@ -606,6 +601,13 @@ static int mount_fstab(const char* fstabfile, int mount_mode) {
  */
 static int queue_fs_event(int code) {
     int ret = code;
+    
+    std::string bootmode = property_get("ro.bootmode");
+    if (strncmp(bootmode.c_str(), "ffbm", 4) == 0) {
+        NOTICE("ffbm mode, not start class main\n");
+        return 0;
+    }
+
     if (code == FS_MGR_MNTALL_DEV_NEEDS_ENCRYPTION) {
         ActionManager::GetInstance().QueueEventTrigger("encrypt");
     } else if (code == FS_MGR_MNTALL_DEV_MIGHT_BE_ENCRYPTED) {
